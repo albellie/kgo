@@ -1,0 +1,24 @@
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: shared-gtw
+  namespace: shared-infra
+spec:
+  gatewayClassName: kong
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+            
+  - name: proxy-ssl
+    port: 443
+    allowedRoutes:
+      namespaces:
+        from: All  
+    protocol: HTTPS
+    hostname: q3.kong.com
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - kind: Secret
+          name: q3.kong.com

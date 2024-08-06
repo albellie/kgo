@@ -1,0 +1,29 @@
+kind: GatewayConfiguration
+apiVersion: gateway-operator.konghq.com/v1beta1
+metadata:
+  name: kong
+  namespace: shared-infra
+spec:
+  dataPlaneOptions:
+    deployment:
+      podTemplateSpec:
+        metadata:
+          annotations:
+            kuma.io/gateway: enabled
+        spec:
+          containers:
+          - name: proxy
+            image: kong:3.7.1
+            readinessProbe:
+              initialDelaySeconds: 1
+              periodSeconds: 1
+  controlPlaneOptions:
+    deployment:
+      podTemplateSpec:
+        spec:
+          containers:
+          - name: controller
+            image: kong/kubernetes-ingress-controller:3.2.0
+            env:
+            - name: CONTROLLER_LOG_LEVEL
+              value: debug

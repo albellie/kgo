@@ -1,0 +1,19 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: cafe-app
+  namespace: coffee  
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: shared-gtw
+      namespace: shared-infra
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /coffee
+      backendRefs:
+        - name: coffee-svc
+          port: 80
