@@ -1,0 +1,23 @@
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: echo-gtw
+  namespace: echo-ns
+spec:
+  gatewayClassName: kong-echo
+  listeners:
+  - name: proxy-ssl
+    port: 443
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchLabels:
+            echo-gtw: "true"  
+    protocol: HTTPS
+    hostname: q3.kong.com
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - kind: Secret
+          name: q3.kong.com
